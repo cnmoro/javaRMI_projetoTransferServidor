@@ -9,9 +9,6 @@ import java.rmi.RemoteException;
  */
 public interface InterfaceServCli extends Remote {
 
-    public String obterCotacao() throws RemoteException;
-//    Obter cotações e reserva de transfers
-
-    public String reservarTransfer() throws RemoteException;
-//    Fazer a reserva de um transfer
+    //Obter cotações
+    public void exibirCotacoes(InterfaceCli cliente) throws RemoteException;
 }

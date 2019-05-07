@@ -2,6 +2,7 @@ package servidor;
 
 import interfaces.InterfaceCli;
 import interfaces.InterfaceMotorista;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,8 +30,22 @@ public class DbManager {
         }
     }
 
-    public static List<TransferModel> getTransfers() {
-        return transfers;
+    public static String getTransfers() {
+        //Formata a lista de transfer de maneira legível para o cliente
+        StringBuilder sb = new StringBuilder();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+
+        for (TransferModel tm : transfers) {
+            sb.append("\nTransfer número: " + tm.getId() + "\n");
+            sb.append("Tipo do Veículo: " + tm.getTipoVeiculo() + "\n");
+            sb.append("Número de Passagens: " + tm.getNumPassageiros() + "\n");
+            sb.append("Data e Hora: " + sdf.format(tm.getDataHora()) + "\n");
+            sb.append("Itinerário: " + tm.getItinerario() + "\n");
+            sb.append("Preço: R$" + tm.getPreco() + "\n");
+            sb.append("----------\n\n");
+        }
+
+        return sb.toString();
     }
 
     public static synchronized void adicionaInteresseCliente(String interesse, InterfaceCli cliente) {

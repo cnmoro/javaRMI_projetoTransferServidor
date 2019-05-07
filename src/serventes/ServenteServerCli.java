@@ -1,8 +1,10 @@
 package serventes;
 
+import interfaces.InterfaceCli;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import interfaces.InterfaceServCli;
+import servidor.DbManager;
 
 /**
  *
@@ -13,11 +15,8 @@ public class ServenteServerCli extends UnicastRemoteObject implements InterfaceS
     public ServenteServerCli() throws RemoteException {
     }
 
-    public String obterCotacao() {
-        return null;
-    }
-
-    public String reservarTransfer() throws RemoteException {
-        return null;
+    @Override
+    public void exibirCotacoes(InterfaceCli cliente) throws RemoteException {
+        cliente.receberCotacoes(DbManager.getTransfers());
     }
 }

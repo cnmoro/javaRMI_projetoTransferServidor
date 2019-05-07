@@ -8,6 +8,7 @@ import java.util.Date;
  */
 public class TransferModel {
 
+    int id;
     double preco;
     int numPassageiros;
     String tipoVeiculo;
@@ -17,12 +18,21 @@ public class TransferModel {
     public TransferModel() {
     }
 
-    public TransferModel(double preco, int numPassageiros, String tipoVeiculo, Date dataHora, String intinerario) {
+    public TransferModel(int id, double preco, int numPassageiros, String tipoVeiculo, Date dataHora, String intinerario) {
+        this.id = id;
         this.preco = preco;
         this.numPassageiros = numPassageiros;
         this.tipoVeiculo = tipoVeiculo;
         this.dataHora = dataHora;
         this.itinerario = intinerario;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public double getPreco() {
