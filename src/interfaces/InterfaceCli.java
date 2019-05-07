@@ -13,7 +13,7 @@ public interface InterfaceCli extends Remote {
 
     public void adicionarInteresse(String interesse) throws RemoteException;
 
-    public void reservarTransfer(int id) throws RemoteException;
+    public void receberConfirmacaoReserva(String mensagem) throws RemoteException;
 
     public void receberCotacoes(String cotacoes) throws RemoteException;
 }

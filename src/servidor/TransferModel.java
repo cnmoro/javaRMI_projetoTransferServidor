@@ -14,17 +14,19 @@ public class TransferModel {
     String tipoVeiculo;
     Date dataHora;
     String itinerario;
+    boolean reservado;
 
     public TransferModel() {
     }
 
-    public TransferModel(int id, double preco, int numPassageiros, String tipoVeiculo, Date dataHora, String intinerario) {
+    public TransferModel(int id, double preco, int numPassageiros, String tipoVeiculo, Date dataHora, String intinerario, boolean reservado) {
         this.id = id;
         this.preco = preco;
         this.numPassageiros = numPassageiros;
         this.tipoVeiculo = tipoVeiculo;
         this.dataHora = dataHora;
         this.itinerario = intinerario;
+        this.reservado = reservado;
     }
 
     public int getId() {
@@ -81,6 +83,14 @@ public class TransferModel {
         this.numPassageiros = tm.getNumPassageiros();
         this.preco = tm.getPreco();
         this.tipoVeiculo = tm.getTipoVeiculo();
+    }
+
+    public boolean isReservado() {
+        return this.reservado;
+    }
+
+    public void setReservado(boolean reservado) {
+        this.reservado = reservado;
     }
 
 }

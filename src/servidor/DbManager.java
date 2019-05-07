@@ -5,7 +5,6 @@ import interfaces.InterfaceMotorista;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  *
@@ -13,19 +12,32 @@ import java.util.List;
  */
 public class DbManager {
 
-    public static List<TransferModel> transfers = new ArrayList<>();
+    public static ArrayList<TransferModel> transfers = new ArrayList<>();
     public static HashMap<String, ArrayList<InterfaceCli>> mapaInteresseClientes = new HashMap<>();
     public static HashMap<String, ArrayList<InterfaceMotorista>> mapaInteresseMotoristas = new HashMap<>();
 
     public static synchronized void adicionaTransfer(TransferModel tm) {
+        //Adiciona o transfer na lista geral
         transfers.add(tm);
     }
 
+    public static TransferModel getTransferPorId(int id) {
+        for (TransferModel tm : transfers) {
+            if (tm.getId() == id) {
+                return tm;
+            }
+        }
+        return null;
+    }
+
     public static synchronized void alteraTransfer(TransferModel tm) {
+        //Obtem indice do transfer
         int indice = transfers.indexOf(tm);
+        //Se indice for -1, significa que não existe, e não realiza nenhuma ação
         if (indice == -1) {
             System.out.println("Este transfer não existe, e não pode ser alterado.");
         } else {
+            //Caso exista, realiza a mudança
             transfers.get(indice).change(tm);
         }
     }
@@ -33,19 +45,23 @@ public class DbManager {
     public static String getTransfers() {
         //Formata a lista de transfer de maneira legível para o cliente
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         for (TransferModel tm : transfers) {
-            sb.append("\nTransfer número: " + tm.getId() + "\n");
-            sb.append("Tipo do Veículo: " + tm.getTipoVeiculo() + "\n");
-            sb.append("Número de Passagens: " + tm.getNumPassageiros() + "\n");
-            sb.append("Data e Hora: " + sdf.format(tm.getDataHora()) + "\n");
-            sb.append("Itinerário: " + tm.getItinerario() + "\n");
-            sb.append("Preço: R$" + tm.getPreco() + "\n");
-            sb.append("----------\n\n");
+            //Lista somente os transfers disponíveis (que ainda não foram reservados)
+            if (!tm.isReservado()) {
+                sb.append("\nTransfer número: " + tm.getId() + "\n");
+                sb.append("Tipo do Veículo: " + tm.getTipoVeiculo() + "\n");
+                sb.append("Número de Passageiros: " + tm.getNumPassageiros() + "\n");
+                sb.append("Data e Hora: " + sdf.format(tm.getDataHora()) + "\n");
+                sb.append("Itinerário: " + tm.getItinerario() + "\n");
+                sb.append("Preço: R$" + tm.getPreco() + "\n");
+                sb.append("----------");
+            }
         }
 
-        return sb.toString();
+        //Remove os traços de divisão antes de retornar
+        return sb.toString().substring(0, sb.toString().length() - 10);
     }
 
     public static synchronized void adicionaInteresseCliente(String interesse, InterfaceCli cliente) {

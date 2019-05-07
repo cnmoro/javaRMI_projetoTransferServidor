@@ -21,14 +21,27 @@ public class Servidor {
             servicoNomes.bind("ReferenciaServenteServidorCli", serventeServidorCli);
 
             System.out.println("Server Rodando");
-            
+
             DbManager.adicionaTransfer(new TransferModel(
                     1,
                     125,
                     2,
                     "Van",
                     new Date(),
-                    "Av Sete de Setembro, 3165 -> Av Silva Jardim, 500 -> Shopping Estação"));
+                    "Av Sete de Setembro, 3165 -> Av Silva Jardim, 500 -> Shopping Estação",
+                    false
+            ));
+            
+            DbManager.adicionaTransfer(new TransferModel(
+                    2,
+                    105,
+                    1,
+                    "Carro comum",
+                    new Date(),
+                    "Av Iguaçu -> Shopping Estação -> Shopping Curitiba",
+                    false
+            ));
+
         } catch (Exception e) {
             e.printStackTrace();
         }
