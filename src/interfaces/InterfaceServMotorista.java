@@ -7,10 +7,7 @@ import java.rmi.RemoteException;
  *
  * @author cnmoro
  */
-public interface InterfaceServ extends Remote {
-
-    public String obterCotacao() throws RemoteException;
-//    Obter cotações e reserva de transfers
+public interface InterfaceServMotorista extends Remote {
 
     public String cadastrarTransfer() throws RemoteException;
 //    Inserir
