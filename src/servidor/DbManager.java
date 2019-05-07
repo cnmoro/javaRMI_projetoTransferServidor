@@ -13,8 +13,9 @@ import java.util.HashMap;
 public class DbManager {
 
     public static ArrayList<TransferModel> transfers = new ArrayList<>();
-    public static HashMap<String, ArrayList<InterfaceCli>> mapaInteresseClientes = new HashMap<>();
-    public static HashMap<String, ArrayList<InterfaceMotorista>> mapaInteresseMotoristas = new HashMap<>();
+    public static HashMap<Integer, ArrayList<InterfaceCli>> mapaInteresseClientes = new HashMap<>();
+    public static HashMap<Integer, ArrayList<InterfaceMotorista>> mapaInteresseMotoristas = new HashMap<>();
+    public static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
     public static synchronized void adicionaTransfer(TransferModel tm) {
         //Adiciona o transfer na lista geral
@@ -43,19 +44,15 @@ public class DbManager {
     }
 
     public static String getTransfers() {
-        //Formata a lista de transfer de maneira legível para o cliente
+        //Formata a lista de transfers de maneira legível para o cliente
         StringBuilder sb = new StringBuilder();
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
         for (TransferModel tm : transfers) {
             //Lista somente os transfers disponíveis (que ainda não foram reservados)
             if (!tm.isReservado()) {
                 sb.append("\nTransfer número: " + tm.getId() + "\n");
-                sb.append("Tipo do Veículo: " + tm.getTipoVeiculo() + "\n");
-                sb.append("Número de Passageiros: " + tm.getNumPassageiros() + "\n");
                 sb.append("Data e Hora: " + sdf.format(tm.getDataHora()) + "\n");
                 sb.append("Itinerário: " + tm.getItinerario() + "\n");
-                sb.append("Preço: R$" + tm.getPreco() + "\n");
                 sb.append("----------");
             }
         }
@@ -64,7 +61,21 @@ public class DbManager {
         return sb.toString().substring(0, sb.toString().length() - 10);
     }
 
-    public static synchronized void adicionaInteresseCliente(String interesse, InterfaceCli cliente) {
+    public static String getCotacao(TransferModel tm) {
+        //Formata todos os dados do transfer de maneira legível para o cliente
+        StringBuilder sb = new StringBuilder();
+
+        sb.append("\nTransfer número: " + tm.getId() + "\n");
+        sb.append("Tipo do Veículo: " + tm.getTipoVeiculo() + "\n");
+        sb.append("Número de Passageiros: " + tm.getNumPassageiros() + "\n");
+        sb.append("Data e Hora: " + sdf.format(tm.getDataHora()) + "\n");
+        sb.append("Itinerário: " + tm.getItinerario() + "\n");
+        sb.append("Preço: R$" + tm.getPreco() + "\n");
+
+        return sb.toString();
+    }
+
+    public static synchronized void adicionaInteresseCliente(int interesse, InterfaceCli cliente) {
         //verificar se ja existe alguem com este interesse
         if (!mapaInteresseClientes.containsKey(interesse)) {
             //se nao existir, insere (cria nova lista e insere)
@@ -80,7 +91,7 @@ public class DbManager {
         }
     }
 
-    public static synchronized void adicionaInteresseMotorista(String interesse, InterfaceMotorista motorista) {
+    public static synchronized void adicionaInteresseMotorista(int interesse, InterfaceMotorista motorista) {
         //verificar se ja existe alguem com este interesse
         if (!mapaInteresseMotoristas.containsKey(interesse)) {
             //se nao existir, insere (cria nova lista e insere)
@@ -94,6 +105,10 @@ public class DbManager {
             //substitui/atualiza a lista de interessados
             mapaInteresseMotoristas.replace(interesse, motoristas);
         }
+    }
+    
+    public static void enviaNotificacaoInteresse() {
+        
     }
 
     public static ArrayList<InterfaceCli> getClientesInteressadosEm(String interesse) {

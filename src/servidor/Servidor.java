@@ -4,6 +4,7 @@ import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 import serventes.ServenteServerCli;
 
 /**
@@ -22,7 +23,7 @@ public class Servidor {
 
             System.out.println("Server Rodando");
 
-            DbManager.adicionaTransfer(new TransferModel(
+            TransferModel tm1 = new TransferModel(
                     1,
                     125,
                     2,
@@ -30,9 +31,9 @@ public class Servidor {
                     new Date(),
                     "Av Sete de Setembro, 3165 -> Av Silva Jardim, 500 -> Shopping Estação",
                     false
-            ));
-            
-            DbManager.adicionaTransfer(new TransferModel(
+            );
+
+            TransferModel tm2 = new TransferModel(
                     2,
                     105,
                     1,
@@ -40,7 +41,15 @@ public class Servidor {
                     new Date(),
                     "Av Iguaçu -> Shopping Estação -> Shopping Curitiba",
                     false
-            ));
+            );
+
+            DbManager.adicionaTransfer(tm1);
+            DbManager.adicionaTransfer(tm2);
+
+            TimeUnit.SECONDS.sleep(6);
+
+            tm2.setNumPassageiros(3);
+            DbManager.alteraTransfer(tm2);
 
         } catch (Exception e) {
             e.printStackTrace();
