@@ -1,10 +1,10 @@
 package servidor;
 
-import interfaces.InterfaceCli;
-import interfaces.InterfaceMotorista;
+import java.rmi.RemoteException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedList;
+import java.util.Queue;
 
 /**
  *
@@ -13,9 +13,9 @@ import java.util.HashMap;
 public class DbManager {
 
     public static ArrayList<TransferModel> transfers = new ArrayList<>();
-    public static HashMap<Integer, ArrayList<InterfaceCli>> mapaInteresseClientes = new HashMap<>();
-    public static HashMap<Integer, ArrayList<InterfaceMotorista>> mapaInteresseMotoristas = new HashMap<>();
     public static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+    public static Queue<Notificacao> filaNotificacoesClientes = new LinkedList<>();
+    public static Queue<Notificacao> filaNotificacoesMotoristas = new LinkedList<>();
 
     public static synchronized void adicionaTransfer(TransferModel tm) {
         //Adiciona o transfer na lista geral
@@ -31,7 +31,7 @@ public class DbManager {
         return null;
     }
 
-    public static synchronized void alteraTransfer(TransferModel tm) {
+    public static synchronized void alteraTransfer(TransferModel tm, String modificacao) throws RemoteException {
         //Obtem indice do transfer
         int indice = transfers.indexOf(tm);
         //Se indice for -1, significa que não existe, e não realiza nenhuma ação
@@ -40,6 +40,10 @@ public class DbManager {
         } else {
             //Caso exista, realiza a mudança
             transfers.get(indice).change(tm);
+
+            //Insere notificação na fila
+            filaNotificacoesClientes.add(new Notificacao(tm.getId(), modificacao));
+            filaNotificacoesMotoristas.add(new Notificacao(tm.getId(), modificacao));
         }
     }
 
@@ -75,22 +79,7 @@ public class DbManager {
         return sb.toString();
     }
 
-    public static synchronized void adicionaInteresseCliente(int interesse, InterfaceCli cliente) {
-        //verificar se ja existe alguem com este interesse
-        if (!mapaInteresseClientes.containsKey(interesse)) {
-            //se nao existir, insere (cria nova lista e insere)
-            ArrayList<InterfaceCli> clientes = new ArrayList<>();
-            clientes.add(cliente);
-            mapaInteresseClientes.put(interesse, clientes);
-        } else {
-            //se ja existir, pega a lista existente do mapeamento e insere o cliente como interessado
-            ArrayList<InterfaceCli> clientes = mapaInteresseClientes.get(interesse);
-            clientes.add(cliente);
-            //substitui/atualiza a lista de interessados
-            mapaInteresseClientes.replace(interesse, clientes);
-        }
-    }
-
+    /*
     public static synchronized void adicionaInteresseMotorista(int interesse, InterfaceMotorista motorista) {
         //verificar se ja existe alguem com este interesse
         if (!mapaInteresseMotoristas.containsKey(interesse)) {
@@ -106,19 +95,10 @@ public class DbManager {
             mapaInteresseMotoristas.replace(interesse, motoristas);
         }
     }
-    
-    public static void enviaNotificacaoInteresse() {
-        
-    }
 
-    public static ArrayList<InterfaceCli> getClientesInteressadosEm(String interesse) {
-        //buscar no map a partir do interesse
-        return mapaInteresseClientes.get(interesse);
-    }
-
-    public static ArrayList<InterfaceMotorista> getMotoristasInteressadosEm(String interesse) {
+    public static ArrayList<InterfaceMotorista> getMotoristasInteressadosEm(int interesse) {
         //buscar no map a partir do interesse
         return mapaInteresseMotoristas.get(interesse);
     }
-
+     */
 }

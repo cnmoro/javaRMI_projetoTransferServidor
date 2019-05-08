@@ -17,4 +17,7 @@ public interface InterfaceServCli extends Remote {
 
     //Reservar transfer
     public void reservarTransfer(int id, InterfaceCli cliente) throws RemoteException;
+
+    //Tarefa de notificações
+    public void startNotificacoes() throws RemoteException;
 }

@@ -23,6 +23,9 @@ public class Servidor {
 
             System.out.println("Server Rodando");
 
+            //Inicia a tarefa de checagem de novas notificações para enviar aos clientes
+            serventeServidorCli.startNotificacoes();
+
             TransferModel tm1 = new TransferModel(
                     1,
                     125,
@@ -46,10 +49,11 @@ public class Servidor {
             DbManager.adicionaTransfer(tm1);
             DbManager.adicionaTransfer(tm2);
 
-            TimeUnit.SECONDS.sleep(6);
+            TimeUnit.SECONDS.sleep(10);
 
-            tm2.setNumPassageiros(3);
-            DbManager.alteraTransfer(tm2);
+            tm2.setPreco(100);
+            System.out.println("Alterando preço de transfer 2...");
+            DbManager.alteraTransfer(tm2, "teve seu preço reduzido");
 
         } catch (Exception e) {
             e.printStackTrace();
