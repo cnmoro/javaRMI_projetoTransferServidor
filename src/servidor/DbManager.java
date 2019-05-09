@@ -31,6 +31,15 @@ public class DbManager {
         return null;
     }
 
+    public static int getTransferIndicePorId(int id) {
+        for (int i = 0; i < transfers.size(); i++) {
+            if (transfers.get(i).getId() == id) {
+                return i;
+            }
+        }
+        return 0;
+    }
+
     public static synchronized void alteraTransfer(TransferModel tm, String modificacao) throws RemoteException {
         //Obtem indice do transfer
         int indice = transfers.indexOf(tm);

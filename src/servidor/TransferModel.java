@@ -1,12 +1,13 @@
 package servidor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  *
  * @author cnmoro
  */
-public class TransferModel {
+public class TransferModel implements Serializable {
 
     int id;
     double preco;
@@ -27,6 +28,15 @@ public class TransferModel {
         this.dataHora = dataHora;
         this.itinerario = intinerario;
         this.reservado = reservado;
+    }
+
+    public TransferModel(double preco, int numPassageiros, String tipoVeiculo, Date dataHora, String intinerario) {
+        this.preco = preco;
+        this.numPassageiros = numPassageiros;
+        this.tipoVeiculo = tipoVeiculo;
+        this.dataHora = dataHora;
+        this.itinerario = intinerario;
+        this.reservado = false;
     }
 
     public int getId() {

@@ -6,6 +6,7 @@ import java.rmi.registry.Registry;
 import java.util.Date;
 import java.util.concurrent.TimeUnit;
 import serventes.ServenteServerCli;
+import serventes.ServenteServerMotorista;
 
 /**
  *
@@ -17,9 +18,17 @@ public class Servidor {
         try {
             Registry servicoNomes = LocateRegistry.createRegistry(1099);
 
+            //Ref para o cliente
             ServenteServerCli serventeServidorCli = new ServenteServerCli();
 
+            //Ref para o motorista
+            ServenteServerMotorista serventeServidorMot = new ServenteServerMotorista();
+
+            //Vincula a ref para o cliente no servico de nomes
             servicoNomes.bind("ReferenciaServenteServidorCli", serventeServidorCli);
+
+            //Vincula a ref para o motorista no servico de nomes
+            servicoNomes.bind("ReferenciaServenteServidorMot", serventeServidorMot);
 
             System.out.println("Server Rodando");
 
@@ -32,7 +41,7 @@ public class Servidor {
                     2,
                     "Van",
                     new Date(),
-                    "Av Sete de Setembro, 3165 -> Av Silva Jardim, 500 -> Shopping Estação",
+                    "Av Sete de Setembro, 3165 - Av Silva Jardim, 500 - Shopping Estação",
                     false
             );
 
@@ -42,7 +51,7 @@ public class Servidor {
                     1,
                     "Carro comum",
                     new Date(),
-                    "Av Iguaçu -> Shopping Estação -> Shopping Curitiba",
+                    "Av Iguaçu -> Shopping Estação - Shopping Curitiba",
                     false
             );
 
