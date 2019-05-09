@@ -33,8 +33,10 @@ public class Servidor {
             System.out.println("Server Rodando");
 
             //Inicia a tarefa de checagem de novas notificações para enviar aos clientes
-            serventeServidorCli.startNotificacoes();
+            DbManager.startNotificacoesClientes();
+            DbManager.startNotificacoesMotoristas();
 
+            /*
             TransferModel tm1 = new TransferModel(
                     1,
                     125,
@@ -54,15 +56,15 @@ public class Servidor {
                     "Av Iguaçu -> Shopping Estação - Shopping Curitiba",
                     false
             );
+             */
+            //DbManager.adicionaTransfer(tm1);
+            //DbManager.adicionaTransfer(tm2);
 
-            DbManager.adicionaTransfer(tm1);
-            DbManager.adicionaTransfer(tm2);
+            //TimeUnit.SECONDS.sleep(10);
 
-            TimeUnit.SECONDS.sleep(10);
-
-            tm2.setPreco(100);
-            System.out.println("Alterando preço de transfer 2...");
-            DbManager.alteraTransfer(tm2, "teve seu preço reduzido");
+            //tm2.setPreco(100);
+            //System.out.println("Alterando preço de transfer 2...");
+            //DbManager.alteraTransfer(tm2, "teve seu preço reduzido");
 
         } catch (Exception e) {
             e.printStackTrace();

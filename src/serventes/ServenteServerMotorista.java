@@ -5,8 +5,6 @@ import interfaces.InterfaceMotorista;
 import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 import interfaces.InterfaceServMotorista;
-import java.util.ArrayList;
-import java.util.HashMap;
 import servidor.DbManager;
 import servidor.TransferModel;
 
@@ -15,8 +13,6 @@ import servidor.TransferModel;
  * @author cnmoro
  */
 public class ServenteServerMotorista extends UnicastRemoteObject implements InterfaceServMotorista {
-
-    public static HashMap<Integer, ArrayList<InterfaceMotorista>> mapaInteresseMotoristas = new HashMap<>();
 
     public ServenteServerMotorista() throws RemoteException {
     }
@@ -35,6 +31,8 @@ public class ServenteServerMotorista extends UnicastRemoteObject implements Inte
         DbManager.adicionaTransfer(transfer);
         //Informa o motorista que foi adicionado com sucesso
         motorista.receberConfirmacao("O transfer foi adicionado com sucesso." + gson.toJson(transfer));
+        //Marca o motorista como interessado em sua oferta de transfer
+        DbManager.adicionaInteresseMotorista(transfer.getId(), motorista);
     }
 
     @Override
@@ -46,10 +44,10 @@ public class ServenteServerMotorista extends UnicastRemoteObject implements Inte
         //Busca o transfer a ser alterado
         int index = DbManager.getTransferIndicePorId(transfer.getId());
         //Se o transfer existe
-        if (index != 0) {
+        if (index != -1) {
             //Realiza a modificacao
             //DbManager.transfers.get(index).change(transfer);
-            DbManager.alteraTransfer(transfer, "Atualização do motorista");
+            DbManager.alteraTransfer(transfer, "foi atualizado pelo motorista", "motorista");
             //Avisa o motorista que deu tudo certo
             motorista.receberConfirmacao("O transfer foi atualizado com sucesso." + gson.toJson(transfer));
         } else {
@@ -61,5 +59,4 @@ public class ServenteServerMotorista extends UnicastRemoteObject implements Inte
     public void realizarProposta() throws RemoteException {
 
     }
-
 }
