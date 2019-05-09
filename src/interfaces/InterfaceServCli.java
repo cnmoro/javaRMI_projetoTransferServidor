@@ -13,7 +13,7 @@ public interface InterfaceServCli extends Remote {
     public void exibirTransfers(InterfaceCli cliente) throws RemoteException;
 
     //Obter cotacao
-    public void realizarCotacao(int id, InterfaceCli cliente) throws RemoteException;
+    public void realizarCotacao(int id, int clienteId, InterfaceCli cliente) throws RemoteException;
 
     //Reservar transfer
     public void reservarTransfer(int id, InterfaceCli cliente) throws RemoteException;

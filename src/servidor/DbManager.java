@@ -23,11 +23,23 @@ public class DbManager {
     public static Queue<Notificacao> filaNotificacoesMotoristas = new LinkedList<>();
 
     public static HashMap<Integer, ArrayList<InterfaceMotorista>> mapaInteresseMotoristas = new HashMap<>();
-    public static HashMap<Integer, ArrayList<InterfaceCli>> mapaInteresseClientes = new HashMap<>();
+    public static HashMap<Integer, ArrayList<ClienteModel>> mapaInteresseClientes = new HashMap<>();
 
     public static synchronized void adicionaTransfer(TransferModel tm) {
         //Adiciona o transfer na lista geral
         transfers.add(tm);
+    }
+
+    public static void enviaNotificacaoProposta(int transferId, double novoPreco, int clienteId) throws RemoteException {
+        //Encontra a referencia do cliente a partir de seu id
+        ArrayList<ClienteModel> interessados = mapaInteresseClientes.get(transferId);
+        for (ClienteModel cliente : interessados) {
+            if (cliente.getClienteId() == clienteId) {
+                //Envia a notificacao por chamada de metodo do cliente
+                cliente.getClienteRef().receberNotificacao("você recebeu uma proposta no transfer de número " + transferId + ", novo valor: R$" + novoPreco);
+            }
+            break;
+        }
     }
 
     public static TransferModel getTransferPorId(int id) {
@@ -95,7 +107,7 @@ public class DbManager {
         return sb.toString().substring(0, sb.toString().length() - 10);
     }
 
-    public static String getCotacao(TransferModel tm) {
+    public static String getCotacao(TransferModel tm, int clienteId) {
         //Formata todos os dados do transfer de maneira legível para o cliente
         StringBuilder sb = new StringBuilder();
 
@@ -107,7 +119,7 @@ public class DbManager {
         sb.append("Preço: R$" + tm.getPreco() + "\n");
 
         //Cria uma notificacao para ser enviada ao motorista que fornece este transfer
-        filaNotificacoesMotoristas.add(new Notificacao(tm.getId(), "um cliente realizou uma cotação do seu transfer de número " + tm.getId()));
+        filaNotificacoesMotoristas.add(new Notificacao(tm.getId(), "um cliente realizou uma cotação do seu transfer de número " + tm.getId() + ";" + clienteId));
 
         return sb.toString();
     }
@@ -176,33 +188,33 @@ public class DbManager {
 
     public static void enviaNotificacaoInteresseClientes(int id, String modificação) throws RemoteException {
         //Encontrar clientes e motoristas que tem interesse neste transfer
-        ArrayList<InterfaceCli> clientes = getClientesInteressadosEm(id);
+        ArrayList<ClienteModel> clientes = getClientesInteressadosEm(id);
 
         //Se houver pessoas interessadas neste transfer
         if (clientes != null) {
             //Enviar notificacao para cada um deles
-            for (InterfaceCli cli : clientes) {
-                cli.receberNotificacao("transfer número " + id + " " + modificação);
+            for (ClienteModel cliModel : clientes) {
+                cliModel.getClienteRef().receberNotificacao("transfer número " + id + " " + modificação);
             }
         }
     }
 
-    public static ArrayList<InterfaceCli> getClientesInteressadosEm(int interesse) {
+    public static ArrayList<ClienteModel> getClientesInteressadosEm(int interesse) {
         //buscar no map a partir do interesse
         return mapaInteresseClientes.get(interesse);
     }
 
-    public static synchronized void adicionaInteresseCliente(int interesse, InterfaceCli cliente) {
+    public static synchronized void adicionaInteresseCliente(int interesse, InterfaceCli cliente, int clienteId) {
         //verificar se ja existe alguem com este interesse
         if (!mapaInteresseClientes.containsKey(interesse)) {
             //se nao existir, insere (cria nova lista e insere)
-            ArrayList<InterfaceCli> clientes = new ArrayList<>();
-            clientes.add(cliente);
+            ArrayList<ClienteModel> clientes = new ArrayList<>();
+            clientes.add(new ClienteModel(cliente, clienteId));
             mapaInteresseClientes.put(interesse, clientes);
         } else {
             //se ja existir, pega a lista existente do mapeamento e insere o cliente como interessado
-            ArrayList<InterfaceCli> clientes = mapaInteresseClientes.get(interesse);
-            clientes.add(cliente);
+            ArrayList<ClienteModel> clientes = mapaInteresseClientes.get(interesse);
+            clientes.add(new ClienteModel(cliente, clienteId));
             //substitui/atualiza a lista de interessados
             mapaInteresseClientes.replace(interesse, clientes);
         }

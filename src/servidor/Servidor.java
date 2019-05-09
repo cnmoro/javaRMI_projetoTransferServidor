@@ -3,8 +3,6 @@ package servidor;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
-import java.util.Date;
-import java.util.concurrent.TimeUnit;
 import serventes.ServenteServerCli;
 import serventes.ServenteServerMotorista;
 
@@ -59,13 +57,10 @@ public class Servidor {
              */
             //DbManager.adicionaTransfer(tm1);
             //DbManager.adicionaTransfer(tm2);
-
             //TimeUnit.SECONDS.sleep(10);
-
             //tm2.setPreco(100);
             //System.out.println("Alterando preço de transfer 2...");
             //DbManager.alteraTransfer(tm2, "teve seu preço reduzido");
-
         } catch (Exception e) {
             e.printStackTrace();
         }

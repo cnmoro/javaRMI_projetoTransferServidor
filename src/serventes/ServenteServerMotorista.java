@@ -56,7 +56,19 @@ public class ServenteServerMotorista extends UnicastRemoteObject implements Inte
     }
 
     @Override
-    public void realizarProposta() throws RemoteException {
+    public void realizarProposta(int transferId, double novoPreco, int clienteId) throws RemoteException {
+        TransferModel transf = DbManager.getTransferPorId(transferId);
 
+        //Faz a rotina da proposta somente se o novo preco for menor
+        if (novoPreco < transf.getPreco()) {
+            System.out.println("Redirecionando proposta de novo preço do transfer de número " + transferId + " para o cliente " + clienteId);
+
+            //Atualiza o preco
+            transf.setPreco(novoPreco);
+            DbManager.alteraTransfer(transf, "teve seu valor reduzido", "motorista");
+
+            //Envia notificacao para o interessado
+            DbManager.enviaNotificacaoProposta(transferId, novoPreco, clienteId);
+        }
     }
 }

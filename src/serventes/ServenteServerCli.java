@@ -23,7 +23,7 @@ public class ServenteServerCli extends UnicastRemoteObject implements InterfaceS
     }
 
     @Override
-    public void realizarCotacao(int id, InterfaceCli cliente) throws RemoteException {
+    public void realizarCotacao(int id, int clienteId, InterfaceCli cliente) throws RemoteException {
         //Obtem o transfer com id requerido
         TransferModel tm = DbManager.getTransferPorId(id);
         //Verifica se existe ou se já está reservado
@@ -31,8 +31,8 @@ public class ServenteServerCli extends UnicastRemoteObject implements InterfaceS
             cliente.receberConfirmacaoReserva("transfer indisponível ou já reservado");
         } else {
             //Registra o interesse do cliente no transfer e envia para o cliente
-            DbManager.adicionaInteresseCliente(id, cliente);
-            cliente.receberCotacao(DbManager.getCotacao(tm));
+            DbManager.adicionaInteresseCliente(id, cliente, clienteId);
+            cliente.receberCotacao(DbManager.getCotacao(tm, clienteId));
         }
     }
 
