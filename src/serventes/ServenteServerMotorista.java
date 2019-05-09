@@ -48,7 +48,8 @@ public class ServenteServerMotorista extends UnicastRemoteObject implements Inte
         //Se o transfer existe
         if (index != 0) {
             //Realiza a modificacao
-            DbManager.transfers.get(index).change(transfer);
+            //DbManager.transfers.get(index).change(transfer);
+            DbManager.alteraTransfer(transfer, "Atualização do motorista");
             //Avisa o motorista que deu tudo certo
             motorista.receberConfirmacao("O transfer foi atualizado com sucesso." + gson.toJson(transfer));
         } else {
