@@ -3,7 +3,6 @@ package servidor;
 import interfaces.InterfaceCli;
 import interfaces.InterfaceMotorista;
 import java.rmi.RemoteException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -18,7 +17,6 @@ import java.util.TimerTask;
 public class DbManager {
 
     public static ArrayList<TransferModel> transfers = new ArrayList<>();
-    public static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
     public static Queue<Notificacao> filaNotificacoesClientes = new LinkedList<>();
     public static Queue<Notificacao> filaNotificacoesMotoristas = new LinkedList<>();
 
@@ -97,14 +95,18 @@ public class DbManager {
             //Lista somente os transfers disponíveis (que ainda não foram reservados)
             if (!tm.isReservado()) {
                 sb.append("\nTransfer número: " + tm.getId() + "\n");
-                sb.append("Data e Hora: " + sdf.format(tm.getDataHora()) + "\n");
+                sb.append("Data e Hora: " + tm.getDataHora() + "\n");
                 sb.append("Itinerário: " + tm.getItinerario() + "\n");
                 sb.append("----------");
             }
         }
 
-        //Remove os traços de divisão antes de retornar
-        return sb.toString().substring(0, sb.toString().length() - 10);
+        if (transfers.isEmpty()) {
+            return "Não existem transfers cadastrados";
+        } else {
+            //Remove os traços de divisão antes de retornar
+            return sb.toString().substring(0, sb.toString().length() - 10);
+        }
     }
 
     public static String getCotacao(TransferModel tm, int clienteId) {
@@ -114,7 +116,7 @@ public class DbManager {
         sb.append("\nTransfer número: " + tm.getId() + "\n");
         sb.append("Tipo do Veículo: " + tm.getTipoVeiculo() + "\n");
         sb.append("Número de Passageiros: " + tm.getNumPassageiros() + "\n");
-        sb.append("Data e Hora: " + sdf.format(tm.getDataHora()) + "\n");
+        sb.append("Data e Hora: " + tm.getDataHora() + "\n");
         sb.append("Itinerário: " + tm.getItinerario() + "\n");
         sb.append("Preço: R$" + tm.getPreco() + "\n");
 

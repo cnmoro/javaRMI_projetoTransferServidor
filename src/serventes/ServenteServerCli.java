@@ -28,7 +28,7 @@ public class ServenteServerCli extends UnicastRemoteObject implements InterfaceS
         TransferModel tm = DbManager.getTransferPorId(id);
         //Verifica se existe ou se já está reservado
         if (tm == null || tm.isReservado()) {
-            cliente.receberConfirmacaoReserva("transfer indisponível ou já reservado");
+            cliente.receberCotacao("Transfer indisponível");
         } else {
             //Registra o interesse do cliente no transfer e envia para o cliente
             DbManager.adicionaInteresseCliente(id, cliente, clienteId);
